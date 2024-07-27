@@ -2,6 +2,13 @@ package Presentation;
 
 import Persistance.DSGDNha_DAO;
 import Domain.DSGDNha_model;
+import Domain.CommandProcessor.Command;
+import Domain.CommandProcessor.CommandProcessor;
+import Domain.CommandProcessor.SuaCommand;
+import Domain.CommandProcessor.ThemCommand;
+import Domain.CommandProcessor.TimKiemCommand;
+import Domain.CommandProcessor.TongTienCommand;
+import Domain.CommandProcessor.XoaCommand;
 import Domain.Observer.Observer;
 
 import java.awt.*;
@@ -143,10 +150,9 @@ public class GDNha_UI_View extends JFrame implements Observer {
   }
 
   public class button_Controller implements ActionListener {
-    private DSGDNha_model dsgdNha_model;
+    Command cmd;
 
-    public button_Controller(DSGDNha_model dsgdNha_model) {
-      this.dsgdNha_model = dsgdNha_model;
+    public button_Controller() {
     }
 
     public void actionListener() {
@@ -160,6 +166,7 @@ public class GDNha_UI_View extends JFrame implements Observer {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+
       if (e.getSource() == TongTienButton) {
         try {
           // Đọc giá trị từ các trường văn bản
@@ -172,8 +179,8 @@ public class GDNha_UI_View extends JFrame implements Observer {
           dsgdNha_model.setDienTich((int) dienTich); // Thiết lập diện tích
           dsgdNha_model.setDonGia(donGia); // Thiết lập đơn giá
 
-          // Tính tổng tiền
-          dsgdNha_model.TongTienThanhToan();
+          cmd = new TongTienCommand(dsgdNha_DAO, dsgdNha_model);
+          cmd.execute();
         } catch (NumberFormatException ex) {
           JOptionPane.showMessageDialog(GDNha_UI_View.this, "Vui lòng nhập số hợp lệ", "Lỗi nhập liệu",
               JOptionPane.ERROR_MESSAGE);
@@ -185,15 +192,8 @@ public class GDNha_UI_View extends JFrame implements Observer {
           int confirm = JOptionPane.showConfirmDialog(GDNha_UI_View.this,
               "Bạn có chắc chắn muốn xóa giao dịch này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
           if (confirm == JOptionPane.YES_OPTION) {
-            boolean isDeleted = dsgdNha_DAO.deleteData(maGiaoDich);
-            if (isDeleted) {
-              JOptionPane.showMessageDialog(GDNha_UI_View.this, "Xóa thành công!", "Thông báo",
-                  JOptionPane.INFORMATION_MESSAGE);
-              clearTextFiled();
-            } else {
-              JOptionPane.showMessageDialog(GDNha_UI_View.this, "Xóa thất bại!", "Lỗi",
-                  JOptionPane.ERROR_MESSAGE);
-            }
+            cmd = new XoaCommand(dsgdNha_DAO, dsgdNha_model, maGiaoDich);
+            cmd.execute();
           }
         } else {
           JOptionPane.showMessageDialog(GDNha_UI_View.this, "Vui lòng chọn giao dịch cần xóa", "Thông báo",
@@ -205,18 +205,8 @@ public class GDNha_UI_View extends JFrame implements Observer {
           double dienTich = Double.parseDouble(dienTichTextField.getText().trim());
           double donGia = Double.parseDouble(donGiaTextField.getText().trim());
 
-          // Tính tổng tiền
-          double tongTien = dienTich * donGia;
-
-          boolean isInserted = dsgdNha_DAO.insertData(loaiNha, dienTich, donGia, tongTien);
-          if (isInserted) {
-            JOptionPane.showMessageDialog(GDNha_UI_View.this, "Thêm thành công!", "Thông báo",
-                JOptionPane.INFORMATION_MESSAGE);
-            clearTextFiled();
-          } else {
-            JOptionPane.showMessageDialog(GDNha_UI_View.this, "Thêm thất bại!", "Lỗi",
-                JOptionPane.ERROR_MESSAGE);
-          }
+          cmd = new ThemCommand(dsgdNha_DAO, dsgdNha_model, loaiNha, dienTich, donGia);
+          cmd.execute();
         } catch (NumberFormatException ex) {
           JOptionPane.showMessageDialog(GDNha_UI_View.this, "Vui lòng nhập số hợp lệ", "Lỗi nhập liệu",
               JOptionPane.ERROR_MESSAGE);
@@ -231,15 +221,8 @@ public class GDNha_UI_View extends JFrame implements Observer {
             String loaiNha = loaiNhaTextField.getText().trim();
             double tongTien = Double.parseDouble(tongTienTextField.getText().trim());
 
-            boolean success = dsgdNha_DAO.updateData(maGiaoDich, loaiNha, dienTich, donGia, tongTien);
-            if (success) {
-              JOptionPane.showMessageDialog(GDNha_UI_View.this, "Cập nhật dữ liệu thành công", "Thành công",
-                  JOptionPane.INFORMATION_MESSAGE);
-              clearTextFiled();
-            } else {
-              JOptionPane.showMessageDialog(GDNha_UI_View.this, "Cập nhật dữ liệu thất bại", "Lỗi",
-                  JOptionPane.ERROR_MESSAGE);
-            }
+            cmd = new SuaCommand(dsgdNha_DAO, dsgdNha_model, maGiaoDich, loaiNha, dienTich, donGia, tongTien);
+            cmd.execute();
           } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(GDNha_UI_View.this, "Vui lòng nhập số hợp lệ", "Lỗi nhập liệu",
                 JOptionPane.ERROR_MESSAGE);
@@ -249,7 +232,9 @@ public class GDNha_UI_View extends JFrame implements Observer {
               JOptionPane.ERROR_MESSAGE);
         }
       } else if (e.getSource() == TimKiemButton) {
-        String maGiaoDich = searchTextField.getText().trim();
+        int maGiaoDich = Integer.parseInt(searchTextField.getText().trim());
+        cmd = new TimKiemCommand(dsgdNha_DAO, dsgdNha_model, maGiaoDich);
+        cmd.execute();
         ArrayList<Object[]> data = dsgdNha_DAO.searchByMaGiaoDich(maGiaoDich);
         jTable.setModel(dsgdNha_DAO.new CustomTableModel(data));
       } else if (e.getSource() == LamMoiButton) {

@@ -99,11 +99,11 @@ public class DSGDNha_DAO extends KetNoiCSDL_DAO implements Subject {
     }
 
     // Tìm kiếm dữ liệu theo mã giao dịch
-    public ArrayList<Object[]> searchByMaGiaoDich(String maGiaoDich) {
+    public ArrayList<Object[]> searchByMaGiaoDich(int maGiaoDich) {
         ArrayList<Object[]> dataList = new ArrayList<>();
         String query = "SELECT MaGiaoDich, LoaiNha, DienTich, DonGia, TongTien FROM GiaoDichNha WHERE MaGiaoDich = ?";
         try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setString(1, maGiaoDich);
+            pstmt.setInt(1, maGiaoDich);
 
             ResultSet rs = pstmt.executeQuery();
 
