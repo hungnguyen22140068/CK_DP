@@ -3,7 +3,6 @@ package Presentation;
 import Persistance.DSGDNha_DAO;
 import Domain.DSGDNha_model;
 import Domain.CommandProcessor.Command;
-import Domain.CommandProcessor.CommandProcessor;
 import Domain.CommandProcessor.SuaCommand;
 import Domain.CommandProcessor.ThemCommand;
 import Domain.CommandProcessor.TimKiemCommand;
@@ -150,7 +149,7 @@ public class GDNha_UI_View extends JFrame implements Observer {
   }
 
   public class button_Controller implements ActionListener {
-    Command cmd;
+    private Command cmd;
 
     public button_Controller() {
     }

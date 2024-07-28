@@ -20,14 +20,6 @@ public class DSGDNha_model implements Subject {
   public DSGDNha_model() {
   }
 
-  public DSGDNha_model(int MaGiaoDich, String LoaiNha, int DienTich, double DonGia, double TongTien) {
-    this.MaGiaoDich = MaGiaoDich;
-    this.LoaiNha = LoaiNha;
-    this.DienTich = DienTich;
-    this.DonGia = DonGia;
-    this.TongTien = TongTien;
-  }
-
   // getter setter
   public int getMaGiaoDich() {
     return this.MaGiaoDich;
