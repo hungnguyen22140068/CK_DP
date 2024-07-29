@@ -9,6 +9,7 @@ public class App {
         DSGDNha_model dsgdNha_model = new DSGDNha_model();
 
         GDNha_UI_View gdNha_UI_View = new GDNha_UI_View(dsgdNha_DAO, dsgdNha_model);
+
         GDNha_UI_View.button_Controller bController = gdNha_UI_View.new button_Controller();
         bController.actionListener();
     }

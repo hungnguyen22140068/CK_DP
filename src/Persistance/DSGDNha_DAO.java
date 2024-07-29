@@ -21,16 +21,14 @@ public class DSGDNha_DAO extends KetNoiCSDL_DAO implements Subject {
     // hiển thị dữ liệu lên bảng
     public ArrayList<Object[]> loadDataFromDatabase() {
         ArrayList<Object[]> dataList = new ArrayList<>();
-        try (Connection conn = getConnection()) { // Use inherited method to get the connection
+        try (Connection conn = getConnection()) {
             String query = "SELECT MaGiaoDich, LoaiNha, DienTich, DonGia, TongTien FROM GiaoDichNha";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
 
-            // Get metadata
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
 
-            // Create data list
             while (rs.next()) {
                 Object[] row = new Object[columnCount];
                 for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
@@ -38,7 +36,6 @@ public class DSGDNha_DAO extends KetNoiCSDL_DAO implements Subject {
                 }
                 dataList.add(row);
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -107,11 +104,9 @@ public class DSGDNha_DAO extends KetNoiCSDL_DAO implements Subject {
 
             ResultSet rs = pstmt.executeQuery();
 
-            // Get metadata
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
 
-            // Create data list
             while (rs.next()) {
                 Object[] row = new Object[columnCount];
                 for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {

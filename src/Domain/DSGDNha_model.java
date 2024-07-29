@@ -68,8 +68,7 @@ public class DSGDNha_model implements Subject {
     } else if ("Thường".equalsIgnoreCase(LoaiNha)) {
       this.TongTien = DonGia * DienTich * 0.9;
     } else {
-      // Nếu loại nhà không hợp lệ, có thể cần thông báo lỗi hoặc xử lý khác
-      this.TongTien = 0; // Hoặc xử lý khác
+      this.TongTien = 0;
     }
     notifyObservers();
   }
